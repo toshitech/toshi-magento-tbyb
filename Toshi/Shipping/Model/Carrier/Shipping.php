@@ -14,6 +14,7 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 use Psr\Log\LoggerInterface;
 use \Magento\Framework\App\RequestInterface;
 use Magento\Checkout\Model\Session;
+use Magento\Payment\Model\Config as PaymentConfig;
 use Magento\Customer\Api\AddressRepositoryInterface;
 class Shipping extends AbstractCarrier implements CarrierInterface
 {
@@ -28,6 +29,7 @@ class Shipping extends AbstractCarrier implements CarrierInterface
   ResultFactory $rateResultFactory,
   MethodFactory $rateMethodFactory,
   Session $session,
+  PaymentConfig $paymentConfig,
   AddressRepositoryInterface $addressRepositoryInterface,
   array $data = []
   )
@@ -36,6 +38,7 @@ class Shipping extends AbstractCarrier implements CarrierInterface
     $this->_rateMethodFactory = $rateMethodFactory;
     $this->_scopeConfig = $scopeConfig;
     $this->_session = $session;
+    $this->_paymentConfig = $paymentConfig;
     $this->_addressRepository = $addressRepositoryInterface;
       parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
   }
@@ -45,6 +48,13 @@ class Shipping extends AbstractCarrier implements CarrierInterface
   }
   public function collectRates(RateRequest $request)
   {
+    $activePaymentMethods = $this->getActivePaymentMethods();
+
+    // Do not show Toshi as a delivery option if COD payment option is not enabled
+    if (!array_key_exists('cashondelivery', $activePaymentMethods)){
+        return false;
+    }
+
     $toshiMinBasketAmount = $this->_scopeConfig->getValue('carriers/toshi/toshi_min_basket_amount');
     $taxDefaultPostcode = $this->_scopeConfig->getValue('tax/defaults/postcode');
     $post = json_decode(file_get_contents('php://input'));
@@ -146,5 +156,10 @@ class Shipping extends AbstractCarrier implements CarrierInterface
       }
 
       return false;
+  }
+
+  private function getActivePaymentMethods()
+  {
+      return $this->_paymentConfig->getActiveMethods();
   }
 }

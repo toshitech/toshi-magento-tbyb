@@ -18,6 +18,9 @@ function launchToshi() {
       api: {
         url: checkoutConfig.toshiUrl,
         key: checkoutConfig.toshiKey
+      },
+      ui: {
+        mode: 'tbyb-checkout'
       }
   });
 
