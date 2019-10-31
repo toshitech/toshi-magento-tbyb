@@ -1,5 +1,5 @@
 define(
-    [],
+    ['toshiShippingRatesRules'],
     function () {
         'use strict';
         return {
@@ -13,10 +13,10 @@ define(
                     },
                     'city': {
                         'required': true
-                    }, 
+                    },
                     'telephone': {
                         'required': true
-                    }, 
+                    },
                     'street': {
                         'required': true
                     }
