@@ -12,7 +12,7 @@ php bin/magento cache:flush
 php bin/magento cache:clean
 ```
 
-1. Ensure the cash on delivery payment method is enabled in magento. 
+1. *Ensure the cash on delivery payment method is enabled in magento*. 
 2. configure toshi-magento/toshi/Shipping/view/frontend/requirejs-config.js to point to the correct CDN for the environment. ('https://integration-cdn.toshi.co/3.0/main.min.js) for production (https://integration-sandbox-cdn.toshi.co/3.0/main.min.js) for staging. 
 3. Login the the Magento backend
 4. Go to "System" -> "Cache Management"
